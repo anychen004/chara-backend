@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const userModel = require('./schema-models/Character')
+//const userModel = require('./schema-models/Character')
 
 const server = '127.0.0.1:27017';
-const database = 'nuevans';      // Since we made our schema into a model, this should be created
+const database = 'chara-base';      // Since we made our schema into a model, this should be created
 
 class Database {
   constructor() {

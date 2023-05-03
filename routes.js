@@ -61,9 +61,9 @@ router.get('/ch/all', (req, res) => { //retrieves entire chara database
     })
     //'then' happens if find is succesful
     .then(characters => {
-      console.log("succesfully got entire db!");
-      console.log(characters);
-      res.json(characters)
+        console.log("succesfully got entire db!");
+        console.log(characters);
+        res.json(characters)
     })
     //if theres an error, 'catch' happens instead
     .catch(err => {
@@ -200,12 +200,21 @@ router.put('/ch/:name/update', (req, res) => { //update character by name.
 
 })
 
-router.put('/ch/:name/add-bl', (req, res) => { //update character by name.
-    CharaSchema.findOneAndUpdate({"charaName":req.params.name}, req.body)
+router.put('/ch/:name/add-bl', (req, res) => { //add a new blurb to the character.
+    CharaSchema.findOne({"charaName":req.params.name})
     .then(character => {
-      console.log("succesfully updated!")
-      console.log(character)
-      res.send(character)
+        character.charaDescriptions.push(req.body); //pushes to array. remember that mongo just runs on javascript and thus all js commands can be used.
+        character.save()
+        .then(character => { 
+            console.log("succesfully updated!")
+            console.log(character)
+            res.send(character)
+        })
+        .catch(err => {
+            console.error(err)
+            res.send(err)
+          })
+      
     })
     .catch(err => {
       console.error(err)
@@ -228,19 +237,6 @@ router.put('/ch/:name/overwrite', (req, res) => { //update character by name, ov
 
 })
 
-router.put('/ch/:name/overwrite', (req, res) => { //update character by name, overwrites entire item.
-    CharaSchema.findOneAndReplace({"charaName":req.params.name}, req.body)
-    .then(character => {
-      console.log("succesfully updated!")
-      console.log(character)
-      res.send(character)
-    })
-    .catch(err => {
-      console.error(err)
-      res.send(err)
-    })
-
-})
 
 // ^^ UPDATES ========================================================
 
