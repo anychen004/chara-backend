@@ -5,6 +5,8 @@ const CLSchema = require('./schema-models/Changelog.js')
 
 //CRUD - create read update destroy (post get put delet)
 
+//CH = chara, CL = changelog, BL = blurb. (henceforth all "charaDesc" is known as "charaBlurb")
+
 router.post('/RESET1', (req, res) => { //deletes database, initializes a whole bunch of characters. TODO.
     
     CharaSchema.deleteMany({}) //theoretically deletes all entries. for now just send the command until it returns nothing left.
@@ -54,7 +56,7 @@ router.post('/RESET2', (req, res) => { //deletes database, initializes a whole b
 })
 
 // vv READS ========================================================
-router.get('/all', (req, res) => { //retrieves entire chara database
+router.get('/ch/all', (req, res) => { //retrieves entire chara database
     CharaSchema.find({
     })
     //'then' happens if find is succesful
@@ -70,7 +72,7 @@ router.get('/all', (req, res) => { //retrieves entire chara database
     })
 })
 
-router.get('/name/:name', (req, res) => { //fetches single character by name
+router.get('/ch/:name', (req, res) => { //fetches single character by name
     CharaSchema.find({"charaName": req.params.name})
     .then(character => {
       console.log("succesfully got", req.params.name, "!");
@@ -83,7 +85,7 @@ router.get('/name/:name', (req, res) => { //fetches single character by name
     })
 })
 
-router.get('/filter', (req, res) => { //retrieves chara database with filter. TODO, alternate filter behaviours? (AND, OR, etc.)
+router.get('/ch/filter', (req, res) => { //retrieves chara database with filter. TODO, alternate filter behaviours? (AND, OR, etc.)
     
     console.log(req.body);
     
@@ -128,7 +130,7 @@ router.get('/cl/:id', (req, res) => { //fetches single changelog entry by id
     })
 })
 
-router.get('/desc/all', (req, res) => { //retrieves entire chara database. TODO FIGURE OUT IF THIS OUGHT TO BE EMPTY (as everything is stored within the chara db and this is just a format template) OR IF IT SHOULD HAVE STUFF IN IT
+router.get('/bl/all', (req, res) => { //retrieves entire chara database. TODO FIGURE OUT IF THIS OUGHT TO BE EMPTY (as everything is stored within the chara db and this is just a format template) OR IF IT SHOULD HAVE STUFF IN IT
     CharaDescSchema.find({
     })
     //'then' happens if find is succesful
@@ -147,7 +149,7 @@ router.get('/desc/all', (req, res) => { //retrieves entire chara database. TODO 
 // ^^ READS ========================================================
 
 // vv CREATES ========================================================
-router.post('/add', (req, res) => { //create a new character. unchanged from previous
+router.post('/ch/add', (req, res) => { //create a new character. unchanged from previous
     console.log(req);
     console.log("PARAMS!!!!!", req.params);
     
@@ -184,7 +186,7 @@ router.post('/cl/add', (req, res) => { //create a new . unchanged from previous
 // ^^ CREATES ========================================================
 
 // vv UPDATES ========================================================
-router.put('/update/:name', (req, res) => { //update character by name.
+router.put('/ch/:name/update', (req, res) => { //update character by name.
     CharaSchema.findOneAndUpdate({"charaName":req.params.name}, req.body)
     .then(character => {
       console.log("succesfully updated!")
@@ -198,7 +200,21 @@ router.put('/update/:name', (req, res) => { //update character by name.
 
 })
 
-router.put('/overwrite/:name', (req, res) => { //update character by name, overwrites entire item.
+router.put('/ch/:name/add-bl', (req, res) => { //update character by name.
+    CharaSchema.findOneAndUpdate({"charaName":req.params.name}, req.body)
+    .then(character => {
+      console.log("succesfully updated!")
+      console.log(character)
+      res.send(character)
+    })
+    .catch(err => {
+      console.error(err)
+      res.send(err)
+    })
+
+})
+
+router.put('/ch/:name/overwrite', (req, res) => { //update character by name, overwrites entire item.
     CharaSchema.findOneAndReplace({"charaName":req.params.name}, req.body)
     .then(character => {
       console.log("succesfully updated!")
@@ -212,7 +228,7 @@ router.put('/overwrite/:name', (req, res) => { //update character by name, overw
 
 })
 
-router.put('/overwrite/:name', (req, res) => { //update character by name, overwrites entire item.
+router.put('/ch/:name/overwrite', (req, res) => { //update character by name, overwrites entire item.
     CharaSchema.findOneAndReplace({"charaName":req.params.name}, req.body)
     .then(character => {
       console.log("succesfully updated!")
@@ -229,7 +245,7 @@ router.put('/overwrite/:name', (req, res) => { //update character by name, overw
 // ^^ UPDATES ========================================================
 
 // vv DELET ========================================================
-router.delete('/:name', (req, res) => { //delete by name
+router.delete('/ch/:name/delete', (req, res) => { //delete by name
     CharaSchema.findOneAndDelete(req.params.name)
     .then(character => {
       console.log("succesfully deleted!")
@@ -243,7 +259,7 @@ router.delete('/:name', (req, res) => { //delete by name
 
 })
 
-router.delete('/cl/:id', (req, res) => { //delete by name
+router.delete('/cl/:id/delete', (req, res) => { //delete by name
     CharaSchema.findByIdAndDelete(req.params.id)
     .then(changelog => {
       console.log("succesfully deleted!")
