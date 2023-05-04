@@ -51,6 +51,6 @@ const charaSchema = new Schema({ //the schema for displaying a single character.
 //====================================================================================
 
 const Character = mongoose.model("Character", charaSchema);
-const CharaDesc = mongoose.model("CharaDesc", charaDescSchema);
+//const CharaDesc = mongoose.model("CharaDesc", charaDescSchema);
 
-module.exports = [Character, CharaDesc];
+module.exports = Character;

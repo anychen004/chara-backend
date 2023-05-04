@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const [CharaSchema, CharaDescSchema] = require('./schema-models/Character.js')
+const CharaSchema = require('./schema-models/Character.js')
 const CLSchema = require('./schema-models/Changelog.js')
 
 //CRUD - create read update destroy (post get put delet)
@@ -130,21 +130,6 @@ router.get('/cl/:id', (req, res) => { //fetches single changelog entry by id
     })
 })
 
-router.get('/bl/all', (req, res) => { //retrieves entire chara database. TODO FIGURE OUT IF THIS OUGHT TO BE EMPTY (as everything is stored within the chara db and this is just a format template) OR IF IT SHOULD HAVE STUFF IN IT
-    CharaDescSchema.find({
-    })
-    //'then' happens if find is succesful
-    .then(desc => {
-      console.log("succesfully got entire db!");
-      console.log(desc);
-      res.json(desc)
-    })
-    //if theres an error, 'catch' happens instead
-    .catch(err => {
-      console.error(err);
-      res.send(err) //send back the error to postman so it doens't hang. postman can also elaborate on the bug from their end
-    })
-})
 
 // ^^ READS ========================================================
 
