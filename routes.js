@@ -7,7 +7,7 @@ const CLSchema = require('./schema-models/Changelog.js')
 
 //CH = chara, CL = changelog, BL = blurb. (henceforth all "charaDesc" is known as "charaBlurb")
 
-router.post('/RESET1', (req, res) => { //deletes database, initializes a whole bunch of characters. TODO.
+router.post('/ch/RESET1', (req, res) => { //deletes database, initializes a whole bunch of characters. TODO.
     
     CharaSchema.deleteMany({}) //theoretically deletes all entries. for now just send the command until it returns nothing left.
     .then(character => {
@@ -21,7 +21,7 @@ router.post('/RESET1', (req, res) => { //deletes database, initializes a whole b
     
 })
 
-router.post('/RESET2', (req, res) => { //deletes database, initializes a whole bunch of characters. TODO.
+router.post('/ch/RESET2', (req, res) => { //deletes database, initializes a whole bunch of characters. TODO.
     
     CharaSchema.insertMany([
         { "charaName": "Isekendre Faust",
