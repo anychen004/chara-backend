@@ -25,6 +25,17 @@ https://fonts.adobe.com/fonts/lo-res */
 
     /* z-index: 0; layering order. higher numbers go in front. the mouse cannot interact with the canvas if it's -1 tho*/
 }
+.foreground {
+    position: absolute;
+    top: 71vh;
+    left: 57vw;
+    z-index: 4;
+
+    height: 100px;
+    width: 100px;
+
+    outline: 0px red solid;
+}
 
 
 body {
