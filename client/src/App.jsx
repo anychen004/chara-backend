@@ -6,14 +6,25 @@ import dialogueIcon from './assets/oz_pfp.png';
 
 
 async function fetchCharaBase() {
+    console.log("fetching charabase...")
     const charaBase = await fetch("http://localhost:3000/ch/all");
+
+    console.log("charabase fetched")
     return charaBase.json();
 }
 
-function MenuItem({ title, link }) {
+async function fetchCharaSingle(name) {
+    console.log("fetching charabase...")
+    const charaBase = await fetch("http://localhost:3000/ch/"+{name});
+
+    console.log("character fetched")
+    return charaBase.json();
+}
+
+function MenuItem({ text, func }) {
     return(
-        <div className="menu-item" onClick={()=>{console.log("clicked!!!")}}>
-            {title}
+        <div className="menu-item" onClick={() => {console.log("clicked!"); func()}}>
+            {text}
         </div>
     );
 }
@@ -23,11 +34,20 @@ class App extends React.Component {
             super()
     
             this.state = {
-                test: "nothing yet!"
+                entireDB: "nothing yet!"
             }
         }
 
-        getData = () => {
+        addCharabaseToState = () => {
+            console.log("running add to state")
+            fetchCharaBase()
+            .then(charabase => {console.log("==== CHARABASE:\n", charabase); this.setState({entireDB: charabase})})
+            .catch(err => {
+                console.error(err);
+            })
+        }
+
+        printData = () => {
             fetchCharaBase()
             .then(data => {console.log(data)})
             .catch(err => {
@@ -35,8 +55,23 @@ class App extends React.Component {
             })
         }
 
+        displayCharabase = () => {
+            console.log(this.state.entireDB[0].charaName);
+            document.getElementById("content").innerHTML=String(this.state.entireDB[0].charaName);
+        }
+
+        displayCharaSingle = (name) => {
+            console.log("running display single")
+            fetchCharaSingle()
+            .then(charabase => {console.log("==== CHARA:\n", charabase); document.getElementById("content").innerHTML=String(charabase)})
+            .catch(err => {
+                console.error(err);
+            })
+        }
+
         componentDidMount() {
-            this.getData()
+            //this.printData()
+            this.addCharabaseToState()
         }
 
 
@@ -45,12 +80,22 @@ class App extends React.Component {
             <div className="main">
                 <div className="content-wrapper">
                     <div className="menu-wrapper">
-                        <MenuItem title="test"/>
-                        <MenuItem title="woah!!"/>
-                        <MenuItem title="woah2"/>
-                        <MenuItem title="ugh"/>
+                        <MenuItem text="display all" func={() => this.displayCharabase()} />
+                        <MenuItem text="woah!!" func={() => console.log("hi")} />
+                        <MenuItem text="woah2" func={() => console.log("hi")} />
+                        <MenuItem text="ugh" func={() => console.log("hi")} />
                     </div>
-                    <div className="content">Here's the thing. You said a "wyvern is a dragon." Is it in the same family? Yes. No one's arguing that. As someone who is a 1k MMR feeder who studies dragons, I am telling you, specifically, in dota, no one calls wyverns dragons. If you want to be "specific" like you said, then you shouldn't either. They're not the same thing. If you're saying "dragon family" you're referring to the taxonomic grouping of Varanidae, which includes things from wyverns to eldwurms to drakes. So your reasoning for calling a wyvern a dragon is because random people "call the flying lizards dragons?" Let's get gyarados and charizards in there, then, too. Also, calling someone a noob or a feeder? It's not one or the other, that's not how taxonomy works. They're both. A wyvern is a wyvern and a member of the dragon family. But that's not what you said. You said a wyvern is a dragon, which is not true unless you're okay with calling all members of the dragon family dragons, which means you'd call eldwurms, drakes, and other flying lizards dragons, too. Which you said you don't. It's okay to just admit you're wrong, you know?</div>
+                    <div className="content" id="content">
+                        
+                        <form onSubmit={() => {console.log(this.state.value); this.displayCharaSingle("skew")}}>
+                            <label>
+                            Name Of Character To Display: 
+                            <input value={this.state.value} onChange={this.handleChange} />
+                            </label>
+                            <input type="submit" value="Fetch!" />
+                        </form>
+                    
+                    </div>
                 </div>
                 <div className="dialogue-box-wrapper">
                     <img className="dialogue-icon" src={dialogueIcon} style={{height: "120%", outline: "0px red solid", alignSelf: "flex-end"}}></img>

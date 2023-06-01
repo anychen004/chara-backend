@@ -9,7 +9,7 @@ function Pointer(props) {
   const [hovered, hover] = useState(false)
   const [clicked, click] = useState(false)
   // Subscribe this component to the render-loop, rotate the mesh every frame
-  useFrame((state, delta) => (ref.current.rotation.z -= delta*0.5))
+  useFrame((state, delta) => (ref.current.rotation.z -= delta*0.5)) //TODO ADD CUSTOM ROTATION SO THAT IT GOES FASTER WHEN EDGE-ON
   // Return the view, these are regular Threejs elements expressed in JSX
   
   return (

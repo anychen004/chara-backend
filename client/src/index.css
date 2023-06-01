@@ -1,5 +1,4 @@
-@import url(https://use.typekit.net/non1ufr.css); /* FONT FAMILY "Brevier", "Lores" #, and "Ocr-a-std.
-https://fonts.adobe.com/fonts/brevier
+@import url(https://use.typekit.net/non1ufr.css); /* FONT FAMILY "Lores".
 https://fonts.adobe.com/fonts/lo-res */
 
 
@@ -63,7 +62,7 @@ body {
     /* font-weight: bold; */
     letter-spacing: 1px;
     word-spacing: 3px;
-    line-height: 20px;
+    line-height: 24px;
 }
 .menu-wrapper {
     position: relative;
@@ -98,7 +97,7 @@ body {
 
     text-align: justify;
 
-    max-height: 30vh;
+    height: 30vh;
     width: 90vh;
     overflow: auto;
 
