@@ -13,13 +13,6 @@ async function fetchCharaBase() {
     return charaBase.json();
 }
 
-async function fetchCharaSingle(name) {
-    console.log("fetching charabase...")
-    const charaBase = await fetch("http://localhost:3000/ch/"+{name});
-
-    console.log("character fetched")
-    return charaBase.json();
-}
 
 function MenuItem({ text, func }) {
     return(
@@ -34,7 +27,8 @@ class App extends React.Component {
             super()
     
             this.state = {
-                entireDB: "nothing yet!"
+                entireDB: [{"charaName": "nothing yet!"}],
+                currentDisplay: "all"
             }
         }
 
@@ -47,58 +41,79 @@ class App extends React.Component {
             })
         }
 
-        printData = () => {
-            fetchCharaBase()
-            .then(data => {console.log(data)})
-            .catch(err => {
-                console.error(err);
-            })
-        }
-
-        displayCharabase = () => {
-            console.log(this.state.entireDB[0].charaName);
-            document.getElementById("content").innerHTML=String(this.state.entireDB[0].charaName);
-        }
-
-        displayCharaSingle = (name) => {
-            console.log("running display single")
-            fetchCharaSingle()
-            .then(charabase => {console.log("==== CHARA:\n", charabase); document.getElementById("content").innerHTML=String(charabase)})
-            .catch(err => {
-                console.error(err);
-            })
-        }
-
         componentDidMount() {
             //this.printData()
-            this.addCharabaseToState()
+            this.addCharabaseToState();
         }
 
+        CharaCard({charaName}){
+            return(
+                <span className="chara-card">
+                    {charaName}</span>
+            );
+        }
+        renderCharaCards = () => {
+            const charabase = this.state.entireDB;
+            console.log("test!", charabase);
+            
+            return(
+                <>   
+                {charabase.map((item, index) => (
+                    <this.CharaCard charaName={item.charaName} key={item.charaName}/>
+                    ))}
+                </>
+                );
+        }
+        CharaSingleInfo({chara}){
+            console.log("woah!", chara);
+
+            return(
+                <span className="chara-single-info">
+                    NAME: {chara.charaName}
+                </span>
+            )
+        }
+        renderCharaSingleInfo = (requestName) => {
+            const charabase = this.state.entireDB;
+            console.log("rendeer please!", charabase);
+
+            return(
+                <this.CharaSingleInfo chara={charabase[0]}/>
+            );
+            
+        }
 
         render(){
         return(
             <div className="main">
                 <div className="content-wrapper">
                     <div className="menu-wrapper">
-                        <MenuItem text="display all" func={() => this.displayCharabase()} />
+                        <MenuItem text="display all" func={() => console.log("TOO BAD LMAO")} />
                         <MenuItem text="woah!!" func={() => console.log("hi")} />
                         <MenuItem text="woah2" func={() => console.log("hi")} />
                         <MenuItem text="ugh" func={() => console.log("hi")} />
                     </div>
                     <div className="content" id="content">
                         
-                        <form onSubmit={() => {console.log(this.state.value); this.displayCharaSingle("skew")}}>
+                        <form onSubmit={() => this.setState({currentDisplay: "skew"})}>
                             <label>
                             Name Of Character To Display: 
                             <input value={this.state.value} onChange={this.handleChange} />
                             </label>
                             <input type="submit" value="Fetch!" />
                         </form>
+
+                        <hr></hr>
+                        
+                        <span className="chara-card-wrapper">
+                            {this.state.currentDisplay=="all" ? <this.renderCharaCards /> : <this.renderCharaSingleInfo requestName={this.state.currentDisplay}/>}
+                            
+                        </span>
                     
                     </div>
                 </div>
                 <div className="dialogue-box-wrapper">
-                    <img className="dialogue-icon" src={dialogueIcon} style={{height: "120%", outline: "0px red solid", alignSelf: "flex-end"}}></img>
+                    <img className="dialogue-icon" src={dialogueIcon} style={{height: "120%", outline: "1px red solid", alignSelf: "flex-end"}}></img>
                     <span className="dialogue-text">oh nyoooo~!!!1!!</span>
                 </div>
             </div>

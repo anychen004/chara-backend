@@ -19,7 +19,7 @@ function Pointer(props) {
       onPointerOver={(event) => hover(true)}
       onPointerOut={(event) => hover(false)}>
       <cylinderGeometry args={[1, 1, 0.25, 3]} /> {/* triangular prism. see if I can get to fill screen? */}
-      <meshStandardMaterial color={hovered ? "red" : "#F2F2F2"} />
+      <meshStandardMaterial color={hovered ? "#BF3C1F" : "#F2F2F2"} />
     </mesh>
   )
 }

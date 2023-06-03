@@ -73,7 +73,7 @@ router.get('/ch/all', (req, res) => { //retrieves entire chara database
 })
 
 router.get('/ch/:name', (req, res) => { //fetches single character by name
-    CharaSchema.find({"charaName": req.params.name})
+    CharaSchema.findOne({"charaName": req.params.name})
     .then(character => {
       console.log("succesfully got", req.params.name, "!");
       console.log(character);
