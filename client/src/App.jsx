@@ -61,7 +61,9 @@ class App extends React.Component {
 
             return(
                 <span className="chara-card">
-                    {chara.charaName} {"\n"} {chara.charaImg}
+                    {chara.charaName}
+                    <br />
+                    {chara.charaImg}
                     </span>
             );
         }
