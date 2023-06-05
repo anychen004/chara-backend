@@ -13,10 +13,6 @@ https://fonts.adobe.com/fonts/lo-res */
     --med-blue: #566D8C;
 }
 
-div, span{
-    border: 1px solid red;
-}
-
 .background {
     position: absolute;
     top: 0;
