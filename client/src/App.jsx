@@ -28,14 +28,23 @@ class App extends React.Component {
     
             this.state = {
                 entireDB: [{"charaName": "nothing yet!"}],
-                currentDisplay: "all"
+                currentDisplay: "all",
+                input: "character name!",
+                charaIndexer: [],
             }
+
+            this.CharaCard = this.CharaCard.bind(this);
+            this.CharaSingleInfo = this.CharaSingleInfo.bind(this);
+            //idk why i need to bind only select items tho
         }
 
         addCharabaseToState = () => {
             console.log("running add to state")
             fetchCharaBase()
-            .then(charabase => {console.log("==== CHARABASE:\n", charabase); this.setState({entireDB: charabase})})
+            .then(charabase => {
+                console.log("==== CHARABASE:\n", charabase);
+                this.setState({entireDB: charabase})
+            })
             .catch(err => {
                 console.error(err);
             })
@@ -43,13 +52,17 @@ class App extends React.Component {
 
         componentDidMount() {
             //this.printData()
-            this.addCharabaseToState();
+            this.addCharabaseToState()
         }
 
-        CharaCard({charaName}){
+        CharaCard({charaIndex}){
+            const chara = this.state.entireDB[charaIndex];
+            console.log("characard!!!", chara);
+
             return(
                 <span className="chara-card">
-                    {charaName}</span>
+                    {chara.charaName} {"\n"} {chara.charaImg}
+                    </span>
             );
         }
         renderCharaCards = () => {
@@ -59,27 +72,58 @@ class App extends React.Component {
             return(
                 <>   
                 {charabase.map((item, index) => (
-                    <this.CharaCard charaName={item.charaName} key={item.charaName}/>
+                    <this.CharaCard charaIndex={index} key={item.charaName}/>
                     ))}
                 </>
                 );
         }
-        CharaSingleInfo({chara}){
+        CharaSingleInfo({requestIndex}){
+            const chara = this.state.entireDB[requestIndex];
             console.log("woah!", chara);
 
             return(
                 <span className="chara-single-info">
                     NAME: {chara.charaName}
+                    <br />
+                    PRONOUNS: {chara.charaPronouns}
+                    <br />
+                    IMG: {chara.charaImg}
+                    <br />
+                    DESC: {JSON.stringify(chara.charaDescriptions)}
                 </span>
             )
         }
-        renderCharaSingleInfo = (requestName) => {
-            const charabase = this.state.entireDB;
-            console.log("rendeer please!", charabase);
+        // renderCharaSingleInfo = (requestName) => {
+        //     const charabase = this.state.entireDB;
+        //     console.log("render pleeease!", charabase);
 
-            return(
-                <this.CharaSingleInfo chara={charabase[0]}/>
-            );
+        //     return(
+        //         <this.CharaSingleInfo chara={charabase[0]}/>
+        //     );
+            
+        // }
+
+        areEqualFunc(element){
+            let input = document.getElementById("chara-input");
+            return element == input.value;
+        }
+        handleFormSubmit(event){
+            event.preventDefault(); //this prevents the reloading situation
+            let input = document.getElementById("chara-input"); //fix if i find how to 
+            console.log("REQUESTED!!", input.value); //what was written in the form field
+
+            if (this.state.charaIndexer.length == 0) { //if still empty
+                for (let i = 0; i < this.state.entireDB.length; i++) {
+                    console.log("indexed:", this.state.entireDB[i].charaName);
+                    this.setState(previousState => ({
+                        charaIndexer: [...previousState.charaIndexer, this.state.entireDB[i].charaName]
+                    }));
+                  }
+            }
+
+            console.log(this.state.charaIndexer);
+            let tempIndex = this.state.charaIndexer.findIndex(this.areEqualFunc); //would love to do an inline func but because it auto-passes the element in i don't know how to set up the props alas
+            {tempIndex==-1 ? console.log("No chara by that name!!!!") : this.setState({currentDisplay: tempIndex})}
             
         }
 
@@ -88,25 +132,25 @@ class App extends React.Component {
             <div className="main">
                 <div className="content-wrapper">
                     <div className="menu-wrapper">
-                        <MenuItem text="display all" func={() => console.log("TOO BAD LMAO")} />
+                        <MenuItem text="display all" func={() => this.setState({currentDisplay: "all"})} />
                         <MenuItem text="woah!!" func={() => console.log("hi")} />
                         <MenuItem text="woah2" func={() => console.log("hi")} />
                         <MenuItem text="ugh" func={() => console.log("hi")} />
                     </div>
                     <div className="content" id="content">
                         
-                        <form onSubmit={() => this.setState({currentDisplay: "skew"})}>
+                        <form onSubmit={this.handleFormSubmit.bind(this)}>
                             <label>
                             Name Of Character To Display: 
-                            <input value={this.state.value} onChange={this.handleChange} />
+                            <input id="chara-input" type="text" value={this.state.value} onChange={this.handleChange} />
                             </label>
                             <input type="submit" value="Fetch!" />
                         </form>
 
                         <hr></hr>
                         
-                        <span className="chara-card-wrapper">
-                            {this.state.currentDisplay=="all" ? <this.renderCharaCards /> : <this.renderCharaSingleInfo requestName={this.state.currentDisplay}/>}
+                        <span className="chara-card-wrapper" id="chara-card-wrapper">
+                            {this.state.currentDisplay=="all" ? <this.renderCharaCards /> : <this.CharaSingleInfo requestIndex={this.state.currentDisplay}/>}
                             
                         </span>
                     
